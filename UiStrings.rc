@@ -5,15 +5,15 @@
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 STRINGTABLE
 BEGIN
-    IDS_UI_APP_TITLE "DAOC Brightness"
-    IDS_UI_MAIN_TITLE "DAOC screen brightness"
+    IDS_UI_APP_TITLE "DAoC Brightness"
+    IDS_UI_MAIN_TITLE "DAoC screen brightness"
     IDS_UI_REFRESH "Refresh"
     IDS_UI_CONNECT "Connect"
     IDS_UI_DISCONNECT "Disconnect"
     IDS_UI_RESET "Reset defaults"
     IDS_UI_LICENSES "Licenses"
-    IDS_UI_LICENSE_TITLE "DAOC Brightness - Licenses"
-    IDS_UI_INSTRUCTIONS "Ctrl+Home: toggle the in-game menu\nGamma - Brightness - Contrast - Saturation - Shadows"
+    IDS_UI_LICENSE_TITLE "DAoC Brightness - Licenses"
+    IDS_UI_INSTRUCTIONS "Ctrl+Home: toggle the in-game menu.\nGamma - Brightness - Contrast\nSaturation - Night / shadows"
     IDS_UI_SELECT_GAME "Select a game and connect."
     IDS_UI_GAME_DETECTED "Game PID detected. Select it and connect."
     IDS_UI_PROCESS_QUERY_FAILED "Process query failed: "
@@ -47,25 +47,24 @@ BEGIN
     IDS_UI_SATURATION "Saturation"
     IDS_UI_SHADOWS "Night / shadows"
     IDS_UI_SHADOW_HELP "Brightens the dark areas of the screen."
-    IDS_UI_SETTINGS_DEFAULTS "Using default brightness settings."
-    IDS_UI_SETTINGS_RESTORED "Saved brightness settings restored."
-    IDS_UI_SETTINGS_SAVED "Brightness settings saved automatically."
     IDS_UI_SETTINGS_LOAD_FAILED "Could not load brightness settings: "
     IDS_UI_SETTINGS_SAVE_FAILED "Could not save brightness settings: "
+    IDS_UI_CLIENT_SETTINGS "Client settings"
+    IDS_UI_HELP "Help"
 END
 
 LANGUAGE LANG_KOREAN, SUBLANG_KOREAN
 STRINGTABLE
 BEGIN
-    IDS_UI_APP_TITLE "DAOC 밝기 조절"
-    IDS_UI_MAIN_TITLE "DAOC 화면 밝기 조절"
+    IDS_UI_APP_TITLE "DAoC 밝기 조절"
+    IDS_UI_MAIN_TITLE "DAoC 화면 밝기 조절"
     IDS_UI_REFRESH "새로고침"
     IDS_UI_CONNECT "연결"
     IDS_UI_DISCONNECT "연결 해제"
     IDS_UI_RESET "기본값 리셋"
     IDS_UI_LICENSES "라이선스"
-    IDS_UI_LICENSE_TITLE "DAOC 밝기 조절 - 라이선스"
-    IDS_UI_INSTRUCTIONS "게임에서 Ctrl+Home → 왼쪽 상단 조절 메뉴\n감마 · 밝기 · 대비 · 채도 · 밤 / 암부 보정"
+    IDS_UI_LICENSE_TITLE "DAoC 밝기 조절 - 라이선스"
+    IDS_UI_INSTRUCTIONS "게임에서 Ctrl+Home → 왼쪽 상단 메뉴\n감마 · 밝기 · 대비 · 채도\n밤 / 암부 보정"
     IDS_UI_SELECT_GAME "게임을 선택하고 연결하세요."
     IDS_UI_GAME_DETECTED "게임 PID를 감지했습니다. 선택 후 연결하세요."
     IDS_UI_PROCESS_QUERY_FAILED "프로세스 조회 실패: "
@@ -99,9 +98,8 @@ BEGIN
     IDS_UI_SATURATION "채도"
     IDS_UI_SHADOWS "밤 / 암부 보정"
     IDS_UI_SHADOW_HELP "암부 보정은 어두운 부분을 밝게 합니다."
-    IDS_UI_SETTINGS_DEFAULTS "기본 밝기 설정을 사용합니다."
-    IDS_UI_SETTINGS_RESTORED "저장된 밝기 설정을 불러왔습니다."
-    IDS_UI_SETTINGS_SAVED "밝기 설정이 자동 저장되었습니다."
     IDS_UI_SETTINGS_LOAD_FAILED "밝기 설정을 불러오지 못했습니다: "
     IDS_UI_SETTINGS_SAVE_FAILED "밝기 설정을 저장하지 못했습니다: "
+    IDS_UI_CLIENT_SETTINGS "클라이언트 설정"
+    IDS_UI_HELP "도움말"
 END

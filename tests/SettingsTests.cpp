@@ -33,7 +33,7 @@ void ChannelTests(){
     Check(Same(render,Sample()) && !ReadPublishedSettings(&exchange,read),"incomplete controller command ignored");
 }
 void ControllerTests(const std::wstring& path){
-    settingsStatus=CreateWindowW(L"STATIC",L"",0,0,0,450,42,nullptr,nullptr,GetModuleHandleW(nullptr),nullptr);
+    status=CreateWindowW(L"STATIC",L"",0,0,0,276,54,nullptr,nullptr,GetModuleHandleW(nullptr),nullptr);
     settingsPath=path;currentSettings=Settings{};lastSaved=Settings{};pendingSave=false;saveAttempted=false;
     Channel shared{};channel=&shared;connectedPid=GetCurrentProcessId();
     LONG serial=0;Settings render,value;bool found=false;DWORD error=0;
@@ -51,7 +51,7 @@ void ControllerTests(const std::wstring& path){
     ReadRequestedSettings(channel,serial,render);PublishSettings(channel,render,serial);SyncSettings();
     Check(Default(currentSettings) && !pendingSave,"reset acknowledgement retains persisted defaults");
     channel=nullptr;connectedPid=0;
-    DestroyWindow(settingsStatus);settingsStatus=nullptr;
+    DestroyWindow(status);status=nullptr;
 }
 int wmain(int argc,wchar_t** argv){
     Settings value;bool found=false;DWORD error=0;

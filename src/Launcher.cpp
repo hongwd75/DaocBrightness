@@ -13,13 +13,14 @@ using namespace Brightness;
 using Ui::Id;
 std::vector<Candidate> candidates;
 HWND list=nullptr,status=nullptr,connectButton=nullptr;
-HWND settingsStatus=nullptr;
+std::wstring settingsError;
 HANDLE mapping=nullptr; Channel* channel=nullptr; DWORD connectedPid=0; HANDLE targetProcess=nullptr;
 std::wstring settingsPath;
 Settings currentSettings,lastSaved;
 bool pendingSave=false,saveAttempted=false;
 DWORD changedAt=0,lastSaveAttempt=0;
 void Message(HWND w,const std::wstring& text){MessageBoxW(w,text.c_str(),Ui::W(Id::AppTitle),MB_OK|MB_ICONINFORMATION);}
+void Status(const std::wstring& text){SetWindowTextW(status,settingsError.empty()?text.c_str():settingsError.c_str());}
 std::wstring Error(DWORD code){
     wchar_t* text=nullptr;
     DWORD flags=FORMAT_MESSAGE_ALLOCATE_BUFFER|FORMAT_MESSAGE_FROM_SYSTEM|FORMAT_MESSAGE_IGNORE_INSERTS;
@@ -31,8 +32,8 @@ std::wstring Error(DWORD code){
 void InitSettings(){
     DWORD error=0;bool found=false;
     if(!DefaultSettingsPath(settingsPath,error) || !LoadSettings(settingsPath,currentSettings,found,error)){
-        currentSettings=Settings{};SetWindowTextW(settingsStatus,(Ui::W(Id::SettingsLoadFailed)+Error(error)).c_str());
-    }else SetWindowTextW(settingsStatus,Ui::W(found?Id::SettingsRestored:Id::SettingsDefaults));
+        currentSettings=Settings{};settingsError=Ui::W(Id::SettingsLoadFailed)+Error(error);Status(settingsError);
+    }
     lastSaved=currentSettings;
 }
 void SyncSettings(bool force=false){
@@ -48,8 +49,9 @@ void SyncSettings(bool force=false){
     if(!force && (now-changedAt<500 || (saveAttempted && now-lastSaveAttempt<2000)))return;
     DWORD error=ERROR_PATH_NOT_FOUND;saveAttempted=true;lastSaveAttempt=now;
     if(!settingsPath.empty() && SaveSettings(settingsPath,currentSettings,error)){
-        lastSaved=currentSettings;pendingSave=false;SetWindowTextW(settingsStatus,Ui::W(Id::SettingsSaved));
-    }else SetWindowTextW(settingsStatus,(Ui::W(Id::SettingsSaveFailed)+Error(error)).c_str());
+        lastSaved=currentSettings;pendingSave=false;
+        if(!settingsError.empty()){settingsError.clear();Status(Ui::W(connectedPid?Id::WaitingFrames:Id::SelectGame));}
+    }else {settingsError=Ui::W(Id::SettingsSaveFailed)+Error(error);Status(settingsError);}
 }
 void ResetSettings(){
     currentSettings=Settings{};if(channel)RequestSettings(channel,currentSettings);
@@ -57,7 +59,7 @@ void ResetSettings(){
 }
 std::vector<Candidate> Find() {
     DWORD error=0;auto found=FindGames(&error);
-    if(error && !channel)SetWindowTextW(status,(Ui::W(Id::ProcessQueryFailed)+Error(error)).c_str());
+    if(error && !channel)Status(Ui::W(Id::ProcessQueryFailed)+Error(error));
     return found;
 }
 void Refresh(){
@@ -73,7 +75,7 @@ void Refresh(){
         SendMessageW(list,CB_ADDSTRING,0,reinterpret_cast<LPARAM>(text));if(c.pid==selected)choice=int(i);
     }if(!candidates.empty()){
         SendMessageW(list,CB_SETCURSEL,choice,0);
-        if(!channel)SetWindowTextW(status,Ui::W(Id::GameDetected));
+        if(!channel)Status(Ui::W(Id::GameDetected));
     }
 }
 bool Module(DWORD pid,const wchar_t* name,uintptr_t& base,std::wstring* path=nullptr) {
@@ -111,7 +113,7 @@ void Disconnect(){
     SyncSettings(true);
     if(channel){InterlockedExchange(&channel->enabled,0);UnmapViewOfFile(channel);channel=nullptr;}
     if(mapping){CloseHandle(mapping);mapping=nullptr;}if(targetProcess){CloseHandle(targetProcess);targetProcess=nullptr;}
-    connectedPid=0;SetWindowTextW(connectButton,Ui::W(Id::Connect));SetWindowTextW(status,Ui::W(Id::Disconnected));
+    connectedPid=0;SetWindowTextW(connectButton,Ui::W(Id::Connect));Status(Ui::W(Id::Disconnected));
 }
 void Connect(HWND w){
     if(channel){Disconnect();return;}
@@ -144,7 +146,7 @@ void Connect(HWND w){
     RequestSettings(channel,currentSettings);InterlockedExchange(&channel->enabled,1);
     DWORD error=0;if(!Inject(targetProcess,c.pid,hook.path,error)){Disconnect();
         Message(w,error==ERROR_REVISION_MISMATCH?Ui::W(Id::ModuleVersionMismatch):Ui::W(Id::ConnectionFailed)+Error(error));return;}
-    connectedPid=c.pid;SetWindowTextW(connectButton,Ui::W(Id::Disconnect));SetWindowTextW(status,Ui::W(Id::WaitingFrames));
+    connectedPid=c.pid;SetWindowTextW(connectButton,Ui::W(Id::Disconnect));Status(Ui::W(Id::WaitingFrames));
 }
 HWND Control(HWND w,const wchar_t* cls,const wchar_t* text,DWORD style,int x,int y,int width,int height,int id){
     HWND control=CreateWindowW(cls,text,WS_CHILD|WS_VISIBLE|style,x,y,width,height,w,reinterpret_cast<HMENU>(INT_PTR(id)),GetModuleHandleW(nullptr),nullptr);
@@ -168,16 +170,26 @@ void Licenses(HWND owner){
 }
 LRESULT CALLBACK Proc(HWND w,UINT msg,WPARAM wp,LPARAM lp){
     switch(msg){
+    case WM_CTLCOLORSTATIC:
+    case WM_CTLCOLORBTN:
+    case WM_CTLCOLOREDIT:
+        SetTextColor(reinterpret_cast<HDC>(wp),GetSysColor(COLOR_BTNTEXT));
+        SetBkColor(reinterpret_cast<HDC>(wp),GetSysColor(COLOR_BTNFACE));
+        return reinterpret_cast<LRESULT>(GetSysColorBrush(COLOR_BTNFACE));
+    case WM_CTLCOLORLISTBOX:
+        SetTextColor(reinterpret_cast<HDC>(wp),GetSysColor(COLOR_BTNTEXT));
+        SetBkColor(reinterpret_cast<HDC>(wp),GetSysColor(COLOR_BTNFACE));
+        return reinterpret_cast<LRESULT>(GetSysColorBrush(COLOR_BTNFACE));
     case WM_CREATE:
-        Control(w,L"STATIC",Ui::W(Id::MainTitle),0,20,16,430,24,0);
-        list=Control(w,L"COMBOBOX",L"",CBS_DROPDOWNLIST|WS_VSCROLL,20,48,450,180,100);
-        Control(w,L"BUTTON",Ui::W(Id::Refresh),0,20,88,105,32,101);
-        connectButton=Control(w,L"BUTTON",Ui::W(Id::Connect),0,140,88,105,32,102);
-        Control(w,L"BUTTON",Ui::W(Id::Reset),0,260,88,130,32,103);
-        Control(w,L"BUTTON",Ui::W(Id::Licenses),0,400,88,80,32,104);
-        Control(w,L"STATIC",Ui::W(Id::Instructions),0,20,140,450,48,0);
-        status=Control(w,L"STATIC",Ui::W(Id::SelectGame),0,20,202,450,70,0);
-        settingsStatus=Control(w,L"STATIC",Ui::W(Id::SettingsDefaults),0,20,278,450,42,0);
+        Control(w,L"BUTTON",Ui::W(Id::ClientSettings),BS_GROUPBOX,12,12,300,210,105);
+        list=Control(w,L"COMBOBOX",L"",CBS_DROPDOWNLIST|WS_VSCROLL|WS_TABSTOP,24,38,276,180,100);
+        Control(w,L"BUTTON",Ui::W(Id::Refresh),WS_TABSTOP,24,76,134,30,101);
+        connectButton=Control(w,L"BUTTON",Ui::W(Id::Connect),WS_TABSTOP,166,76,134,30,102);
+        Control(w,L"BUTTON",Ui::W(Id::Reset),WS_TABSTOP,24,114,134,30,103);
+        Control(w,L"BUTTON",Ui::W(Id::Licenses),WS_TABSTOP,166,114,134,30,104);
+        status=Control(w,L"STATIC",Ui::W(Id::SelectGame),0,24,158,276,54,107);
+        Control(w,L"BUTTON",Ui::W(Id::Help),BS_GROUPBOX,12,232,300,90,106);
+        Control(w,L"STATIC",Ui::W(Id::Instructions),0,24,254,276,58,108);
         InitSettings();
         Refresh();SetTimer(w,1,500,nullptr);SetTimer(w,2,2000,nullptr);return 0;
     case WM_COMMAND:
@@ -191,7 +203,7 @@ LRESULT CALLBACK Proc(HWND w,UINT msg,WPARAM wp,LPARAM lp){
             if(FAILED(error))swprintf_s(text,Ui::W(Id::RenderingError),connectedPid,error);
             else if(renderer)swprintf_s(text,Ui::W(Id::ActiveFrames),connectedPid,renderer,channel->frames);
             else swprintf_s(text,Ui::W(Id::WaitingRenderer),connectedPid);
-            SetWindowTextW(status,text);
+            Status(text);
         }SyncSettings();return 0;
     case WM_DESTROY:KillTimer(w,1);KillTimer(w,2);Disconnect();PostQuitMessage(0);return 0;
     }return DefWindowProcW(w,msg,wp,lp);
@@ -199,11 +211,11 @@ LRESULT CALLBACK Proc(HWND w,UINT msg,WPARAM wp,LPARAM lp){
 }
 int WINAPI wWinMain(HINSTANCE instance,HINSTANCE,LPWSTR,int show){
     HANDLE single=CreateMutexW(nullptr,TRUE,L"Local\\DaocBrightnessController");if(GetLastError()==ERROR_ALREADY_EXISTS){Message(nullptr,Ui::W(Id::AlreadyRunning));if(single)CloseHandle(single);return 0;}
-    WNDCLASSEXW wc{};wc.cbSize=sizeof(wc);wc.lpfnWndProc=Proc;wc.hInstance=instance;wc.lpszClassName=L"DaocBrightnessController";wc.hCursor=LoadCursorW(nullptr,IDC_ARROW);wc.hbrBackground=reinterpret_cast<HBRUSH>(COLOR_WINDOW+1);
+    WNDCLASSEXW wc{};wc.cbSize=sizeof(wc);wc.lpfnWndProc=Proc;wc.hInstance=instance;wc.lpszClassName=L"DaocBrightnessController";wc.hCursor=LoadCursorW(nullptr,IDC_ARROW);wc.hbrBackground=GetSysColorBrush(COLOR_BTNFACE);
     wc.hIcon=static_cast<HICON>(LoadImageW(instance,MAKEINTRESOURCEW(IDI_APP_ICON),IMAGE_ICON,GetSystemMetrics(SM_CXICON),GetSystemMetrics(SM_CYICON),LR_SHARED));
     wc.hIconSm=static_cast<HICON>(LoadImageW(instance,MAKEINTRESOURCEW(IDI_APP_ICON),IMAGE_ICON,GetSystemMetrics(SM_CXSMICON),GetSystemMetrics(SM_CYSMICON),LR_SHARED));
     RegisterClassExW(&wc);
-    HWND w=CreateWindowW(wc.lpszClassName,Ui::W(Id::AppTitle),WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX,CW_USEDEFAULT,CW_USEDEFAULT,510,370,nullptr,nullptr,instance,nullptr);
+    HWND w=CreateWindowW(wc.lpszClassName,Ui::W(Id::AppTitle),WS_OVERLAPPED|WS_CAPTION|WS_SYSMENU|WS_MINIMIZEBOX,CW_USEDEFAULT,CW_USEDEFAULT,340,370,nullptr,nullptr,instance,nullptr);
     if(!w){if(single)CloseHandle(single);return 1;}ShowWindow(w,show);
     MSG msg{};while(GetMessageW(&msg,nullptr,0,0)>0){TranslateMessage(&msg);DispatchMessageW(&msg);}if(single)CloseHandle(single);return 0;
 }

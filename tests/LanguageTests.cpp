@@ -47,7 +47,7 @@ int main(){
         Check(ForLanguageId(MAKELANGID(primary,SUBLANG_DEFAULT))==Language::English,"other Windows languages use English");
     LANGID original=GetThreadUILanguage();SetThreadUILanguage(MAKELANGID(LANG_JAPANESE,SUBLANG_DEFAULT));
     Check(Current()==ForLanguageId(GetUserDefaultUILanguage()),"display language is independent of thread and input language");
-    Check(!wcscmp(W(Id::MainTitle,Language::English),L"DAOC screen brightness") && !wcscmp(W(Id::MainTitle,Language::Korean),L"DAOC 화면 밝기 조절"),"explicit STRINGTABLE language ignores thread language");
+    Check(!wcscmp(W(Id::MainTitle,Language::English),L"DAoC screen brightness") && !wcscmp(W(Id::MainTitle,Language::Korean),L"DAoC 화면 밝기 조절"),"explicit STRINGTABLE language ignores thread language");
     SetThreadUILanguage(original);
     bool complete=true,valid=true,formats=true,ascii=true;
     for(size_t i=0;i<TextCount;i++){

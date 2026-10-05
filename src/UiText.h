@@ -51,11 +51,10 @@ enum class Id : UINT {
     Saturation=IDS_UI_SATURATION,
     Shadows=IDS_UI_SHADOWS,
     ShadowHelp=IDS_UI_SHADOW_HELP,
-    SettingsDefaults=IDS_UI_SETTINGS_DEFAULTS,
-    SettingsRestored=IDS_UI_SETTINGS_RESTORED,
-    SettingsSaved=IDS_UI_SETTINGS_SAVED,
     SettingsLoadFailed=IDS_UI_SETTINGS_LOAD_FAILED,
     SettingsSaveFailed=IDS_UI_SETTINGS_SAVE_FAILED,
+    ClientSettings=IDS_UI_CLIENT_SETTINGS,
+    Help=IDS_UI_HELP,
     Count
 };
 constexpr UINT FirstStringId=IDS_UI_APP_TITLE;
