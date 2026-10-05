@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations"><ProjectConfiguration Include="Release|Win32"><Configuration>Release</Configuration><Platform>Win32</Platform></ProjectConfiguration></ItemGroup>
+  <PropertyGroup Label="Globals"><ProjectGuid>{F67CB886-1E54-46A1-AC2C-D65D469740D2}</ProjectGuid><Keyword>Win32Proj</Keyword><WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion></PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Label="Configuration"><ConfigurationType>Application</ConfigurationType><UseDebugLibraries>false</UseDebugLibraries><PlatformToolset>v143</PlatformToolset><CharacterSet>Unicode</CharacterSet></PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <PropertyGroup><OutDir>$(MSBuildThisFileDirectory)Release\</OutDir><IntDir>$(MSBuildThisFileDirectory)build\$(MSBuildProjectName)\</IntDir><TargetName>DaocBrightness</TargetName><LinkIncremental>false</LinkIncremental></PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile><WarningLevel>Level4</WarningLevel><Optimization>MinSpace</Optimization><RuntimeLibrary>MultiThreaded</RuntimeLibrary><LanguageStandard>stdcpp17</LanguageStandard><PrecompiledHeader>NotUsing</PrecompiledHeader><PreprocessorDefinitions>WIN32;NDEBUG;UNICODE;_UNICODE;NOMINMAX;WIN32_LEAN_AND_MEAN;%(PreprocessorDefinitions)</PreprocessorDefinitions><AdditionalIncludeDirectories>src;vendor\imgui;vendor\imgui\backends;vendor\minhook\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories><AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions><DebugInformationFormat>None</DebugInformationFormat></ClCompile>
+    <Link><SubSystem>Windows</SubSystem><GenerateDebugInformation>false</GenerateDebugInformation><UACExecutionLevel>RequireAdministrator</UACExecutionLevel><AdditionalDependencies>bcrypt.lib;shell32.lib;d3d9.lib;d3d10.lib;dxgi.lib;d3dcompiler.lib;user32.lib;gdi32.lib;imm32.lib;dwmapi.lib;%(AdditionalDependencies)</AdditionalDependencies></Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Launcher.cpp" />
+    <ClCompile Include="src\EmbeddedHook.cpp" />
+    <ClCompile Include="src\SettingsStore.cpp" />
+    <ClInclude Include="src\SettingsStore.h" />
+    <ClInclude Include="src\UiText.h" />
+    <ClInclude Include="src\EmbeddedHook.h" />
+    <ClInclude Include="src\resource.h" />
+    <ResourceCompile Include="Application.rc" />
+    <None Include="assets\kobold-wink.ico" />
+    <None Include="assets\kobold-wink.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="DaocBrightnessHook.vcxproj">
+      <Project>{814F06A6-4D11-424A-A0CB-8AB86B90CFA5}</Project>
+      <LinkLibraryDependencies>false</LinkLibraryDependencies>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\UiText.cpp" />
+    <ResourceCompile Include="UiStrings.rc" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <Target Name="CreateDistribution" AfterTargets="Build">
+    <MakeDir Directories="$(MSBuildThisFileDirectory)dist" />
+    <Copy SourceFiles="$(TargetPath)" DestinationFiles="$(MSBuildThisFileDirectory)dist\DaocBrightness.exe" SkipUnchangedFiles="true" />
+  </Target>
+</Project>

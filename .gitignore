@@ -1,0 +1,10 @@
+/Release/
+/dist/*
+!/dist/DaocBrightness.exe
+/build/
+/.vs/
+*.user
+*.suo
+*.pdb
+*.obj
+*.log

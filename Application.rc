@@ -1,0 +1,6 @@
+#include <windows.h>
+#include "src/resource.h"
+LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
+IDI_APP_ICON ICON "assets\\kobold-wink.ico"
+IDR_HOOK_DLL RCDATA "Release\\DaocBrightnessHook.dll"
+IDR_LICENSES RCDATA "THIRD_PARTY_NOTICES.txt"

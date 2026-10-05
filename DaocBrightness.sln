@@ -1,0 +1,39 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{BC8A1FFA-BEE3-4634-8014-F334798102B3}") = "DaocBrightness", "DaocBrightness.vcxproj", "{F67CB886-1E54-46A1-AC2C-D65D469740D2}"
+EndProject
+Project("{BC8A1FFA-BEE3-4634-8014-F334798102B3}") = "DaocBrightnessHook", "DaocBrightnessHook.vcxproj", "{814F06A6-4D11-424A-A0CB-8AB86B90CFA5}"
+EndProject
+Project("{BC8A1FFA-BEE3-4634-8014-F334798102B3}") = "RenderTests", "RenderTests.vcxproj", "{820294D1-A422-4431-97B5-10C6BC754F19}"
+EndProject
+Project("{BC8A1FFA-BEE3-4634-8014-F334798102B3}") = "ProcessScanTests", "ProcessScanTests.vcxproj", "{9FB62DCB-20C2-4DB5-ABB4-1F332EE96852}"
+EndProject
+Project("{BC8A1FFA-BEE3-4634-8014-F334798102B3}") = "PayloadTests", "PayloadTests.vcxproj", "{6AA3CDCE-F0DF-4EAA-B4CA-68C5B8FEB05A}"
+EndProject
+Project("{BC8A1FFA-BEE3-4634-8014-F334798102B3}") = "LanguageTests", "LanguageTests.vcxproj", "{E828281A-4529-4A42-AA5B-1BF06C274CDF}"
+EndProject
+Project("{BC8A1FFA-BEE3-4634-8014-F334798102B3}") = "SettingsTests", "SettingsTests.vcxproj", "{D4AFE23C-E81B-494C-A103-24617C787E51}"
+EndProject
+Global
+  GlobalSection(SolutionConfigurationPlatforms) = preSolution
+    Release|Win32 = Release|Win32
+  EndGlobalSection
+  GlobalSection(ProjectConfigurationPlatforms) = postSolution
+    {D4AFE23C-E81B-494C-A103-24617C787E51}.Release|Win32.ActiveCfg = Release|Win32
+    {D4AFE23C-E81B-494C-A103-24617C787E51}.Release|Win32.Build.0 = Release|Win32
+    {F67CB886-1E54-46A1-AC2C-D65D469740D2}.Release|Win32.ActiveCfg = Release|Win32
+    {F67CB886-1E54-46A1-AC2C-D65D469740D2}.Release|Win32.Build.0 = Release|Win32
+    {814F06A6-4D11-424A-A0CB-8AB86B90CFA5}.Release|Win32.ActiveCfg = Release|Win32
+    {814F06A6-4D11-424A-A0CB-8AB86B90CFA5}.Release|Win32.Build.0 = Release|Win32
+    {820294D1-A422-4431-97B5-10C6BC754F19}.Release|Win32.ActiveCfg = Release|Win32
+    {820294D1-A422-4431-97B5-10C6BC754F19}.Release|Win32.Build.0 = Release|Win32
+    {E828281A-4529-4A42-AA5B-1BF06C274CDF}.Release|Win32.ActiveCfg = Release|Win32
+    {E828281A-4529-4A42-AA5B-1BF06C274CDF}.Release|Win32.Build.0 = Release|Win32
+    {6AA3CDCE-F0DF-4EAA-B4CA-68C5B8FEB05A}.Release|Win32.ActiveCfg = Release|Win32
+    {6AA3CDCE-F0DF-4EAA-B4CA-68C5B8FEB05A}.Release|Win32.Build.0 = Release|Win32
+    {9FB62DCB-20C2-4DB5-ABB4-1F332EE96852}.Release|Win32.ActiveCfg = Release|Win32
+    {9FB62DCB-20C2-4DB5-ABB4-1F332EE96852}.Release|Win32.Build.0 = Release|Win32
+  EndGlobalSection
+EndGlobal
